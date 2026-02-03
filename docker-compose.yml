@@ -4,8 +4,10 @@ services:
     container_name: sistema_gastos_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ***REMOVED_SECRET***
+      MYSQL_ROOT_PASSWORD: ***REMOVED_SECRET*** 
       MYSQL_DATABASE: sistema_gastos_clientes
+      MYSQL_USER: asako              
+      MYSQL_PASSWORD: ***REMOVED_SECRET***
     ports:
       - "3307:3306"
     volumes:
