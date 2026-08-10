@@ -5,7 +5,7 @@ services:
     restart: "no"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env (see .env.example)}
-      MYSQL_DATABASE: ${DB_NAME:-sistema_gastos_clientes}
+      MYSQL_DATABASE: ${DB_NAME:-BudgEase}
     ports:
       - "3307:3306"
     volumes:
