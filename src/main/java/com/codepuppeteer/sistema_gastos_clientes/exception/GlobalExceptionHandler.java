@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -96,6 +97,19 @@ public class GlobalExceptionHandler {
         Map<String,Object> body = new HashMap<>();
         body.put("error", "Bad Request");
         body.put("message", message);
+        body.put("status", 400);
+        body.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // JSON malformado o valor de enum inválido (p. ej. "tipo": "SALARIO" cuando el enum solo
+    // acepta ESTABLE/VOLATIL) llegaba aquí como una RuntimeException genérica y salía como 500
+    // "error inesperado" en vez de un 400 con el detalle — el cliente no podía saber qué corregir.
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String,Object>> handleNotReadable(HttpMessageNotReadableException ex) {
+        Map<String,Object> body = new HashMap<>();
+        body.put("error", "Bad Request");
+        body.put("message", "Cuerpo de la petición inválido: revisa el formato JSON y los valores de enum enviados.");
         body.put("status", 400);
         body.put("timestamp", LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
