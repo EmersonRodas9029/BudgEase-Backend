@@ -10,6 +10,18 @@ Tipos de datos (referencia rapida):
 - `Boolean`: `true` o `false`
 - `Enum`: usar un valor valido del enum indicado
 
+## Auth (`/api/auth`)
+Unico recurso publico (no requiere `Authorization: Bearer <token>`).
+- POST `/api/auth/login`
+  - Body: `username` (String, requerido), `password` (String, requerido)
+  - Responde `token` (access token JWT, vive `jwt.expiration`, default 24h), `refreshToken` (String opaco, vive `jwt.refresh-expiration`, default 14 dias), `type` ("Bearer"), `userId`, `username`, `email`, `rol`.
+- POST `/api/auth/refresh`
+  - Body: `refreshToken` (String, requerido)
+  - Rota el refresh token: el usado queda revocado y responde un `token` + `refreshToken` nuevos (misma forma que login). 401 si esta vencido, revocado o no existe.
+- POST `/api/auth/logout`
+  - Body: `refreshToken` (String, requerido)
+  - Revoca el refresh token en el servidor (idempotente: no falla si ya no existe). Responde 204.
+
 ## Usuarios (`/api/usuarios`)
 - GET `/api/usuarios`
 - GET `/api/usuarios/{id}`
