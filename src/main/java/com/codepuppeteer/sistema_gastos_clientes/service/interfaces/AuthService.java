@@ -5,4 +5,6 @@ import com.codepuppeteer.sistema_gastos_clientes.dto.auth.LoginResponse;
 
 public interface AuthService {
     LoginResponse login(LoginRequest request);
+    LoginResponse refresh(String refreshToken);
+    void logout(String refreshToken);
 }
